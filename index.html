@@ -16,7 +16,7 @@
     <script type="text/babel">
         const { useState, useEffect } = React;
 
-        // Icônes Lucide React simplifiées
+        // Icônes simplifiées
         const Plus = ({ size = 24, className = "" }) => (
             <svg width={size} height={size} className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -440,155 +440,629 @@
 
             const suggestions = getSuggestions();
 
+            // PAGE D'ACCUEIL
             if (currentView === 'home') {
-                return React.createElement('div', { className: "min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4" },
-                    React.createElement('div', { className: "max-w-6xl mx-auto" },
-                        React.createElement('div', { className: "text-center mb-8" },
-                            React.createElement('div', { className: "flex items-center justify-center gap-3 mb-4" },
-                                React.createElement(Swords, { className: "text-red-600", size: 48 }),
-                                React.createElement('h1', { className: "text-4xl font-bold text-gray-800" }, "Gestionnaire de Tournois Warcry")
-                            ),
-                            React.createElement('p', { className: "text-gray-600" }, "Organisez et suivez vos tournois de Warcry")
-                        ),
-                        
-                        React.createElement('div', { className: "bg-white rounded-lg shadow-lg p-6 mb-8" },
-                            React.createElement('h2', { className: "text-2xl font-semibold mb-4 text-gray-800 flex items-center gap-2" },
-                                React.createElement(Plus, { className: "text-green-600" }),
-                                "Créer un Nouveau Tournoi"
-                            ),
-                            React.createElement('div', { className: "flex gap-3" },
-                                React.createElement('input', {
-                                    type: "text",
-                                    value: newTournamentName,
-                                    onChange: (e) => setNewTournamentName(e.target.value),
-                                    placeholder: "Nom du tournoi (ex: Tournoi Hiver 2025)",
-                                    className: "flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500",
-                                    onKeyPress: (e) => e.key === 'Enter' && createTournament()
-                                }),
-                                React.createElement('button', {
-                                    onClick: createTournament,
-                                    className: "px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 font-medium"
-                                },
-                                    React.createElement(Trophy, { size: 20 }),
-                                    "Créer"
-                                )
-                            )
-                        ),
+                return (
+                    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4">
+                        <div className="max-w-6xl mx-auto">
+                            <div className="text-center mb-8">
+                                <div className="flex items-center justify-center gap-3 mb-4">
+                                    <Swords className="text-red-600" size={48} />
+                                    <h1 className="text-4xl font-bold text-gray-800">Gestionnaire de Tournois Warcry</h1>
+                                </div>
+                                <p className="text-gray-600">Organisez et suivez vos tournois de Warcry</p>
+                            </div>
 
-                        React.createElement('div', { className: "bg-white rounded-lg shadow-lg p-6 mb-8" },
-                            React.createElement('h2', { className: "text-xl font-semibold mb-4 text-gray-800" }, "Sauvegarde & Restauration"),
-                            React.createElement('div', { className: "flex gap-3" },
-                                React.createElement('button', {
-                                    onClick: exportData,
-                                    className: "px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                                }, "📥 Exporter les données"),
-                                React.createElement('label', {
-                                    className: "px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors cursor-pointer"
-                                },
-                                    "📤 Importer les données",
-                                    React.createElement('input', {
-                                        type: "file",
-                                        accept: ".json",
-                                        onChange: importData,
-                                        className: "hidden"
-                                    })
-                                )
-                            ),
-                            React.createElement('p', { className: "text-sm text-gray-600 mt-2" },
-                                "Sauvegardez vos tournois dans un fichier JSON pour les restaurer plus tard"
-                            )
-                        ),
+                            {/* Créer un nouveau tournoi */}
+                            <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+                                <h2 className="text-2xl font-semibold mb-4 text-gray-800 flex items-center gap-2">
+                                    <Plus className="text-green-600" />
+                                    Créer un Nouveau Tournoi
+                                </h2>
+                                <div className="flex gap-3">
+                                    <input
+                                        type="text"
+                                        value={newTournamentName}
+                                        onChange={(e) => setNewTournamentName(e.target.value)}
+                                        placeholder="Nom du tournoi (ex: Tournoi Hiver 2025)"
+                                        className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        onKeyPress={(e) => e.key === 'Enter' && createTournament()}
+                                    />
+                                    <button
+                                        onClick={createTournament}
+                                        className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2 font-medium"
+                                    >
+                                        <Trophy size={20} />
+                                        Créer
+                                    </button>
+                                </div>
+                            </div>
 
-                        React.createElement('div', { className: "bg-white rounded-lg shadow-lg p-6" },
-                            React.createElement('h2', { className: "text-2xl font-semibold mb-6 text-gray-800 flex items-center gap-2" },
-                                React.createElement(Calendar, { className: "text-blue-600" }),
-                                `Tournois (${tournaments.length})`
-                            ),
-                            
-                            tournaments.length > 0 ? 
-                                React.createElement('div', { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" },
-                                    tournaments
-                                        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                                        .map((tournament) => 
-                                            React.createElement('div', { 
-                                                key: tournament.id,
-                                                className: "border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow" 
-                                            },
-                                                React.createElement('div', { className: "flex items-start justify-between mb-3" },
-                                                    React.createElement('h3', { className: "font-semibold text-lg text-gray-800 truncate" }, tournament.name),
-                                                    React.createElement('div', { className: "flex items-center gap-2" },
-                                                        React.createElement('span', {
-                                                            className: `px-2 py-1 rounded-full text-xs font-medium ${
-                                                                tournament.status === 'finished' 
-                                                                    ? 'bg-green-100 text-green-800' 
-                                                                    : 'bg-yellow-100 text-yellow-800'
-                                                            }`
-                                                        }, tournament.status === 'finished' ? 'Terminé' : 'En cours'),
-                                                        React.createElement('button', {
-                                                            onClick: () => deleteTournament(tournament.id),
-                                                            className: "text-red-600 hover:text-red-800 text-xs",
-                                                            title: "Supprimer le tournoi"
-                                                        }, "🗑️")
-                                                    )
-                                                ),
+                            {/* Outils d'import/export */}
+                            <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+                                <h2 className="text-xl font-semibold mb-4 text-gray-800">Sauvegarde & Restauration</h2>
+                                <div className="flex gap-3">
+                                    <button
+                                        onClick={exportData}
+                                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                    >
+                                        📥 Exporter les données
+                                    </button>
+                                    <label className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors cursor-pointer">
+                                        📤 Importer les données
+                                        <input
+                                            type="file"
+                                            accept=".json"
+                                            onChange={importData}
+                                            className="hidden"
+                                        />
+                                    </label>
+                                </div>
+                                <p className="text-sm text-gray-600 mt-2">
+                                    Sauvegardez vos tournois dans un fichier JSON pour les restaurer plus tard
+                                </p>
+                            </div>
+
+                            {/* Liste des tournois */}
+                            <div className="bg-white rounded-lg shadow-lg p-6">
+                                <h2 className="text-2xl font-semibold mb-6 text-gray-800 flex items-center gap-2">
+                                    <Calendar className="text-blue-600" />
+                                    Tournois ({tournaments.length})
+                                </h2>
+                                
+                                {tournaments.length > 0 ? (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        {tournaments
+                                            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                                            .map((tournament) => (
+                                            <div key={tournament.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
+                                                <div className="flex items-start justify-between mb-3">
+                                                    <h3 className="font-semibold text-lg text-gray-800 truncate">{tournament.name}</h3>
+                                                    <div className="flex items-center gap-2">
+                                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                                            tournament.status === 'finished' 
+                                                                ? 'bg-green-100 text-green-800' 
+                                                                : 'bg-yellow-100 text-yellow-800'
+                                                        }`}>
+                                                            {tournament.status === 'finished' ? 'Terminé' : 'En cours'}
+                                                        </span>
+                                                        <button
+                                                            onClick={() => deleteTournament(tournament.id)}
+                                                            className="text-red-600 hover:text-red-800 text-xs"
+                                                            title="Supprimer le tournoi"
+                                                        >
+                                                            🗑️
+                                                        </button>
+                                                    </div>
+                                                </div>
                                                 
-                                                React.createElement('div', { className: "space-y-2 text-sm text-gray-600 mb-4" },
-                                                    React.createElement('div', { className: "flex items-center gap-2" },
-                                                        React.createElement(Users, { size: 16 }),
-                                                        React.createElement('span', {}, `${tournament.bands?.length || 0} bandes`)
-                                                    ),
-                                                    React.createElement('div', { className: "flex items-center gap-2" },
-                                                        React.createElement(Swords, { size: 16 }),
-                                                        React.createElement('span', {}, `${tournament.matches?.filter(m => m.played).length || 0}/${tournament.matches?.length || 0} matchs`)
-                                                    ),
-                                                    React.createElement('div', { className: "flex items-center gap-2" },
-                                                        React.createElement(Calendar, { size: 16 }),
-                                                        React.createElement('span', {}, new Date(tournament.createdAt).toLocaleDateString())
-                                                    ),
-                                                    tournament.status === 'finished' && tournament.standings && tournament.standings[0] && 
-                                                        React.createElement('div', { className: "flex items-center gap-2" },
-                                                            React.createElement(Medal, { size: 16, className: "text-yellow-600" }),
-                                                            React.createElement('span', { className: "font-medium" }, `🥇 ${tournament.standings[0].band}`)
-                                                        )
-                                                ),
+                                                <div className="space-y-2 text-sm text-gray-600 mb-4">
+                                                    <div className="flex items-center gap-2">
+                                                        <Users size={16} />
+                                                        <span>{tournament.bands?.length || 0} bandes</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                        <Swords size={16} />
+                                                        <span>{tournament.matches?.filter(m => m.played).length || 0}/{tournament.matches?.length || 0} matchs</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                        <Calendar size={16} />
+                                                        <span>{new Date(tournament.createdAt).toLocaleDateString()}</span>
+                                                    </div>
+                                                    {tournament.status === 'finished' && tournament.standings && tournament.standings[0] && (
+                                                        <div className="flex items-center gap-2">
+                                                            <Medal size={16} className="text-yellow-600" />
+                                                            <span className="font-medium">🥇 {tournament.standings[0].band}</span>
+                                                        </div>
+                                                    )}
+                                                </div>
                                                 
-                                                React.createElement('button', {
-                                                    onClick: () => loadTournament(tournament),
-                                                    className: "w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
-                                                },
-                                                    React.createElement(Eye, { size: 16 }),
-                                                    tournament.status === 'finished' ? 'Voir résultats' : 'Continuer',
-                                                    React.createElement(ChevronRight, { size: 16 })
-                                                )
-                                            )
-                                        )
-                                ) :
-                                React.createElement('div', { className: "text-center py-12 text-gray-500" },
-                                    React.createElement(Trophy, { size: 48, className: "mx-auto mb-4 text-gray-300" }),
-                                    React.createElement('p', { className: "text-lg mb-2" }, "Aucun tournoi créé"),
-                                    React.createElement('p', {}, "Créez votre premier tournoi pour commencer !")
-                                )
-                        )
-                    )
+                                                <button
+                                                    onClick={() => loadTournament(tournament)}
+                                                    className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                                                >
+                                                    <Eye size={16} />
+                                                    {tournament.status === 'finished' ? 'Voir résultats' : 'Continuer'}
+                                                    <ChevronRight size={16} />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="text-center py-12 text-gray-500">
+                                        <Trophy size={48} className="mx-auto mb-4 text-gray-300" />
+                                        <p className="text-lg mb-2">Aucun tournoi créé</p>
+                                        <p>Créez votre premier tournoi pour commencer !</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
                 );
             }
 
-            // Podium et Tournament views simplifiées pour économiser l'espace...
-            // Le reste du code suit la même logique avec React.createElement
-            
-            return React.createElement('div', { className: "min-h-screen bg-gray-50 p-4" },
-                React.createElement('div', { className: "max-w-4xl mx-auto text-center" },
-                    React.createElement('h1', { className: "text-3xl font-bold text-gray-800 mb-4" }, "Interface du Tournoi"),
-                    React.createElement('p', { className: "text-gray-600 mb-8" }, "Fonctionnalité complète disponible - Code tronqué pour la démo"),
-                    React.createElement('button', {
-                        onClick: goHome,
-                        className: "px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                    }, "🏠 Retour à l'accueil")
-                )
+            // AFFICHAGE DU PODIUM
+            if (currentView === 'podium' && standings.length > 0) {
+                return (
+                    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-yellow-100 to-orange-100 p-4">
+                        <div className="max-w-4xl mx-auto">
+                            <div className="text-center mb-8">
+                                <Trophy className="mx-auto mb-4 text-yellow-600" size={64} />
+                                <h1 className="text-4xl font-bold text-gray-800 mb-2">🏆 {currentTournament?.name} 🏆</h1>
+                                <p className="text-gray-600">Félicitations aux vainqueurs !</p>
+                            </div>
+                            
+                            <div className="flex justify-center items-end gap-4 mb-8">
+                                {/* 2ème place */}
+                                {standings[1] && (
+                                    <div className="text-center">
+                                        <div className="bg-gray-200 rounded-lg p-6 h-32 flex items-end justify-center mb-4">
+                                            <div className="text-center">
+                                                <div className="text-4xl mb-2">🥈</div>
+                                                <div className="text-lg font-bold text-gray-700">{standings[1].band}</div>
+                                                <div className="text-sm text-gray-600">{standings[1].points} pts</div>
+                                            </div>
+                                        </div>
+                                        <div className="bg-gray-300 h-20 rounded-t-lg flex items-center justify-center">
+                                            <span className="text-2xl font-bold text-gray-700">2</span>
+                                        </div>
+                                    </div>
+                                )}
+                                
+                                {/* 1ère place */}
+                                {standings[0] && (
+                                    <div className="text-center">
+                                        <div className="bg-yellow-200 rounded-lg p-6 h-40 flex items-end justify-center mb-4">
+                                            <div className="text-center">
+                                                <div className="text-5xl mb-2">🥇</div>
+                                                <div className="text-xl font-bold text-yellow-800">{standings[0].band}</div>
+                                                <div className="text-sm text-yellow-700">{standings[0].points} pts</div>
+                                            </div>
+                                        </div>
+                                        <div className="bg-yellow-400 h-32 rounded-t-lg flex items-center justify-center">
+                                            <span className="text-3xl font-bold text-yellow-800">1</span>
+                                        </div>
+                                    </div>
+                                )}
+                                
+                                {/* 3ème place */}
+                                {standings[2] && (
+                                    <div className="text-center">
+                                        <div className="bg-orange-200 rounded-lg p-6 h-24 flex items-end justify-center mb-4">
+                                            <div className="text-center">
+                                                <div className="text-3xl mb-2">🥉</div>
+                                                <div className="text-base font-bold text-orange-700">{standings[2].band}</div>
+                                                <div className="text-sm text-orange-600">{standings[2].points} pts</div>
+                                            </div>
+                                        </div>
+                                        <div className="bg-orange-300 h-16 rounded-t-lg flex items-center justify-center">
+                                            <span className="text-xl font-bold text-orange-700">3</span>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                            
+                            {/* Classement complet */}
+                            <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+                                <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">Classement Final</h2>
+                                <div className="space-y-3">
+                                    {standings.map((entry, index) => (
+                                        <div key={entry.band} className={`flex items-center justify-between p-4 rounded-lg ${
+                                            index === 0 ? 'bg-yellow-50 border-2 border-yellow-300' :
+                                            index === 1 ? 'bg-gray-50 border-2 border-gray-300' :
+                                            index === 2 ? 'bg-orange-50 border-2 border-orange-300' :
+                                            'bg-gray-50'
+                                        }`}>
+                                            <div className="flex items-center gap-4">
+                                                <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                                                    index === 0 ? 'bg-yellow-500 text-white' :
+                                                    index === 1 ? 'bg-gray-500 text-white' :
+                                                    index === 2 ? 'bg-orange-500 text-white' :
+                                                    'bg-blue-500 text-white'
+                                                }`}>
+                                                    {index + 1}
+                                                </span>
+                                                <span className="text-lg font-medium">{entry.band}</span>
+                                                {index < 3 && (
+                                                    <span className="text-2xl">
+                                                        {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <div className="text-right">
+                                                <div className="font-bold text-lg">{entry.points} points</div>
+                                                <div className="text-sm text-gray-600">{entry.wins}V - {entry.draws}N - {entry.losses}D</div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            
+                            <div className="text-center space-y-3">
+                                <button
+                                    onClick={goHome}
+                                    className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                                >
+                                    🏠 Retour à l'accueil
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+
+            // INTERFACE DU TOURNOI
+            return (
+                <div className="min-h-screen bg-gray-50 p-4">
+                    <div className="max-w-4xl mx-auto">
+                        <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
+                            <div className="flex items-center justify-between mb-6">
+                                <div className="flex items-center gap-3">
+                                    <Swords className="text-red-600" size={32} />
+                                    <div>
+                                        <h1 className="text-3xl font-bold text-gray-800">{currentTournament?.name || 'Tournoi Warcry'}</h1>
+                                        <p className="text-gray-600">Tournoi en cours</p>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={goHome}
+                                    className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                                >
+                                    🏠 Accueil
+                                </button>
+                            </div>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                                <div className="bg-blue-50 p-4 rounded-lg text-center">
+                                    <Users className="mx-auto mb-2 text-blue-600" size={24} />
+                                    <div className="text-2xl font-bold text-blue-600">{bands.length}</div>
+                                    <div className="text-sm text-gray-600">Bandes inscrites</div>
+                                </div>
+                                <div className="bg-green-50 p-4 rounded-lg text-center">
+                                    <Trophy className="mx-auto mb-2 text-green-600" size={24} />
+                                    <div className="text-2xl font-bold text-green-600">{completedMatches}</div>
+                                    <div className="text-sm text-gray-600">Matchs joués</div>
+                                </div>
+                                <div className="bg-orange-50 p-4 rounded-lg text-center">
+                                    <Swords className="mx-auto mb-2 text-orange-600" size={24} />
+                                    <div className="text-2xl font-bold text-orange-600">{totalMatches - completedMatches}</div>
+                                    <div className="text-sm text-gray-600">Matchs restants</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            {/* Gestion des bandes */}
+                            <div className="bg-white rounded-lg shadow-sm border p-6">
+                                <h2 className="text-xl font-semibold mb-4 text-gray-800">Gestion des Bandes</h2>
+                                
+                                <div className="flex gap-2 mb-4 relative">
+                                    <div className="flex-1 relative">
+                                        <input
+                                            type="text"
+                                            value={newBandName}
+                                            onChange={(e) => {
+                                                setNewBandName(e.target.value);
+                                                setShowSuggestions(true);
+                                            }}
+                                            onFocus={() => setShowSuggestions(true)}
+                                            onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                                            placeholder="Nom de la bande"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            onKeyPress={(e) => e.key === 'Enter' && addBand()}
+                                        />
+                                        
+                                        {/* Suggestions d'autocomplétion */}
+                                        {showSuggestions && suggestions.length > 0 && (
+                                            <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-lg z-10 mt-1">
+                                                {suggestions.map((suggestion, index) => (
+                                                    <button
+                                                        key={index}
+                                                        onClick={() => {
+                                                            setNewBandName(suggestion);
+                                                            setShowSuggestions(false);
+                                                        }}
+                                                        className="w-full text-left px-3 py-2 hover:bg-blue-50 focus:bg-blue-50 focus:outline-none"
+                                                    >
+                                                        {suggestion}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <button
+                                        onClick={addBand}
+                                        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2"
+                                    >
+                                        <Plus size={16} />
+                                        Ajouter
+                                    </button>
+                                </div>
+
+                                <div className="space-y-2">
+                                    {bands.map((band, index) => (
+                                        <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+                                            <span className="font-medium">{band}</span>
+                                            <button
+                                                onClick={() => removeBand(band)}
+                                                className="text-red-600 hover:text-red-800 text-sm"
+                                            >
+                                                Supprimer
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Classement */}
+                            <div className="bg-white rounded-lg shadow-sm border p-6">
+                                <h2 className="text-xl font-semibold mb-4 text-gray-800">Classement</h2>
+                                
+                                {standings.length > 0 ? (
+                                    <div className="space-y-2">
+                                        {standings.map((entry, index) => (
+                                            <div key={entry.band} className="flex items-center justify-between p-3 bg-gray-50 rounded-md">
+                                                <div className="flex items-center gap-3">
+                                                    <span className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                                                        {index + 1}
+                                                    </span>
+                                                    <span className="font-medium">{entry.band}</span>
+                                                </div>
+                                                <div className="text-sm text-gray-600">
+                                                    {entry.wins}V - {entry.draws}N - {entry.losses}D ({entry.points} pts)
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="text-gray-500 text-center py-4">Ajoutez des bandes pour voir le classement</p>
+                                )}
+                                
+                                {/* Bouton terminer tournoi */}
+                                {allMatchesCompleted && matches.length > 0 && (
+                                    <div className="mt-4 pt-4 border-t">
+                                        <button
+                                            onClick={finishTournament}
+                                            className="w-full px-4 py-3 bg-gradient-to-r from-yellow-600 to-orange-600 text-white rounded-lg hover:from-yellow-700 hover:to-orange-700 transition-all font-medium flex items-center justify-center gap-2"
+                                        >
+                                            <Trophy size={20} />
+                                            🏆 Terminer le Tournoi et Voir le Podium 🏆
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Liste des matchs */}
+                        {matches.length > 0 && (
+                            <div className="bg-white rounded-lg shadow-sm border p-6 mt-6">
+                                <h2 className="text-xl font-semibold mb-4 text-gray-800">Matchs du Tournoi</h2>
+                                
+                                <div className="space-y-4">
+                                    {matches.map((match) => (
+                                        <div key={match.id} className={`p-4 rounded-md border ${match.played ? 'bg-green-50 border-green-200' : match.started ? 'bg-blue-50 border-blue-200' : 'bg-yellow-50 border-yellow-200'}`}>
+                                            {match.played ? (
+                                                // Affichage pour les matchs terminés avec détail des rounds
+                                                <div className="space-y-4">
+                                                    <div className="flex items-center justify-center gap-6">
+                                                        <div className="text-center">
+                                                            <div className={`font-medium text-lg px-3 py-2 rounded-md ${
+                                                                match.isDraw 
+                                                                    ? 'bg-gray-100 text-gray-800' 
+                                                                    : match.winner === match.band1 
+                                                                        ? 'bg-green-100 text-green-800' 
+                                                                        : 'bg-red-100 text-red-800'
+                                                            }`}>
+                                                                {match.band1}
+                                                            </div>
+                                                            <div className="text-2xl font-bold mt-1 text-gray-700">
+                                                                {match.totalScore1}
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div className="text-center">
+                                                            <div className="text-gray-500 text-sm mb-2">VS</div>
+                                                            {match.isDraw ? (
+                                                                <span className="text-sm bg-gray-200 text-gray-800 px-3 py-1 rounded-md font-medium">
+                                                                    Match nul
+                                                                </span>
+                                                            ) : (
+                                                                <span className="text-sm bg-green-200 text-green-800 px-3 py-1 rounded-md font-medium">
+                                                                    Vainqueur: {match.winner}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                        
+                                                        <div className="text-center">
+                                                            <div className={`font-medium text-lg px-3 py-2 rounded-md ${
+                                                                match.isDraw 
+                                                                    ? 'bg-gray-100 text-gray-800' 
+                                                                    : match.winner === match.band2 
+                                                                        ? 'bg-green-100 text-green-800' 
+                                                                        : 'bg-red-100 text-red-800'
+                                                            }`}>
+                                                                {match.band2}
+                                                            </div>
+                                                            <div className="text-2xl font-bold mt-1 text-gray-700">
+                                                                {match.totalScore2}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    {/* Détail des rounds */}
+                                                    {match.rounds && match.rounds.length > 0 && (
+                                                        <div className="bg-gray-50 p-3 rounded-md">
+                                                            <h4 className="text-sm font-medium text-gray-700 mb-2">Détail des rounds:</h4>
+                                                            <div className="space-y-1">
+                                                                {match.rounds.map((round, index) => (
+                                                                    <div key={index} className="flex justify-between items-center text-sm">
+                                                                        <span>Round {index + 1}:</span>
+                                                                        <span className="font-mono">{round.score1} - {round.score2}</span>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ) : !match.started ? (
+                                                // Match pas encore commencé
+                                                <div className="text-center">
+                                                    <div className="flex items-center justify-center gap-4 mb-4">
+                                                        <span className="font-medium text-lg">{match.band1}</span>
+                                                        <span className="text-gray-500">vs</span>
+                                                        <span className="font-medium text-lg">{match.band2}</span>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => startMatch(match.id)}
+                                                        className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+                                                    >
+                                                        🎯 Commencer le Match
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                // Interface pour les matchs en cours avec système de rounds
+                                                <div className="space-y-4">
+                                                    {/* En-tête avec noms des bandes */}
+                                                    <div className="flex items-center justify-center gap-6">
+                                                        <div className="text-center">
+                                                            <div className="font-medium text-lg">{match.band1}</div>
+                                                            <div className="text-xl font-bold text-blue-600">
+                                                                {(match.rounds || []).reduce((sum, round) => sum + round.score1, 0)}
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div className="text-center">
+                                                            <div className="text-gray-500 text-sm">VS</div>
+                                                            <div className="text-sm text-gray-600">
+                                                                Round {(match.rounds || []).length + 1}
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div className="text-center">
+                                                            <div className="font-medium text-lg">{match.band2}</div>
+                                                            <div className="text-xl font-bold text-blue-600">
+                                                                {(match.rounds || []).reduce((sum, round) => sum + round.score2, 0)}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    {/* Historique des rounds */}
+                                                    {match.rounds && match.rounds.length > 0 && (
+                                                        <div className="bg-blue-50 p-3 rounded-md">
+                                                            <h4 className="text-sm font-medium text-gray-700 mb-2">Rounds précédents:</h4>
+                                                            <div className="flex flex-wrap gap-2">
+                                                                {match.rounds.map((round, index) => (
+                                                                    <span key={index} className="text-sm bg-white px-2 py-1 rounded font-mono">
+                                                                        R{index + 1}: {round.score1}-{round.score2}
+                                                                    </span>
+                                                                ))}
+                                                                {match.rounds.length > 0 && (
+                                                                    <button
+                                                                        onClick={() => removeLastRound(match.id)}
+                                                                        className="text-sm text-red-600 hover:text-red-800 px-2 py-1"
+                                                                    >
+                                                                        ↶ Annuler dernier
+                                                                    </button>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                    
+                                                    {/* Saisie du round current */}
+                                                    <div className="flex items-center justify-center gap-4">
+                                                        <div className="text-center">
+                                                            <input
+                                                                type="number"
+                                                                min="0"
+                                                                placeholder="Score"
+                                                                value={currentRoundInputs[match.id]?.band1 || ''}
+                                                                onChange={(e) => updateCurrentRoundScore(match.id, 'band1', e.target.value)}
+                                                                className="w-20 px-2 py-1 border border-gray-300 rounded text-center"
+                                                            />
+                                                        </div>
+                                                        
+                                                        <span className="text-gray-500">-</span>
+                                                        
+                                                        <div className="text-center">
+                                                            <input
+                                                                type="number"
+                                                                min="0"
+                                                                placeholder="Score"
+                                                                value={currentRoundInputs[match.id]?.band2 || ''}
+                                                                onChange={(e) => updateCurrentRoundScore(match.id, 'band2', e.target.value)}
+                                                                className="w-20 px-2 py-1 border border-gray-300 rounded text-center"
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    {/* Boutons d'action */}
+                                                    <div className="flex items-center justify-center gap-3">
+                                                        <button
+                                                            onClick={() => addRound(match.id)}
+                                                            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                                                        >
+                                                            Ajouter Round
+                                                        </button>
+                                                        <button
+                                                            onClick={() => setConfirmFinish(match.id)}
+                                                            className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+                                                        >
+                                                            Terminer Match
+                                                        </button>
+                                                    </div>
+                                                    
+                                                    {/* Modale de confirmation */}
+                                                    {confirmFinish === match.id && (
+                                                        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                                                            <div className="bg-white p-6 rounded-lg shadow-xl max-w-md mx-4">
+                                                                <h3 className="text-lg font-semibold mb-4">Confirmer la fin du match</h3>
+                                                                <p className="text-gray-600 mb-2">
+                                                                    Êtes-vous sûr de vouloir terminer ce match ?
+                                                                </p>
+                                                                <div className="bg-gray-50 p-3 rounded mb-4">
+                                                                    <div className="flex justify-between items-center">
+                                                                        <span className="font-medium">{match.band1}</span>
+                                                                        <span className="text-xl font-bold">
+                                                                            {(match.rounds || []).reduce((sum, round) => sum + round.score1, 0)}
+                                                                        </span>
+                                                                    </div>
+                                                                    <div className="flex justify-between items-center">
+                                                                        <span className="font-medium">{match.band2}</span>
+                                                                        <span className="text-xl font-bold">
+                                                                            {(match.rounds || []).reduce((sum, round) => sum + round.score2, 0)}
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="flex gap-3">
+                                                                    <button
+                                                                        onClick={() => setConfirmFinish(null)}
+                                                                        className="flex-1 px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+                                                                    >
+                                                                        Annuler
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => finishMatch(match.id)}
+                                                                        className="flex-1 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                                                                    >
+                                                                        Confirmer
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
             );
         }
 
-        ReactDOM.render(React.createElement(WarcryTournament), document.getElementById('root'));
+        ReactDOM.render(<WarcryTournament />, document.getElementById('root'));
     </script>
 </body>
 </html>
